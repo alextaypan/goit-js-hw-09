@@ -2,6 +2,10 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const btnStart = document.querySelector('[data-start]');
+const daysRef = document.querySelector('[data-days]');
+const hoursRef = document.querySelector('[data-hours]');
+const minsRef = document.querySelector('[data-minutes]');
+const secsRef = document.querySelector('[data-seconds]');
 btnStart.setAttribute('disabled', true);
 
 let chosenDate = null;
@@ -17,8 +21,8 @@ const options = {
       alert('Please choose a date in the future');
     } else {
       btnStart.removeAttribute('disabled');
-      console.log(chosenDate);
-      console.log(Date.now());
+      // console.log(chosenDate);
+      // console.log(Date.now());
     }
   },
 };
@@ -46,38 +50,16 @@ function convertMs(ms) {
 
 // console.log(convertMs(differentTime));
 
-function updateTimer({ days, hours, minutes, seconds }) {
-  const delta = chosenDate - Date.now();
-  const daysRef = document.querySelector('[data-days]');
-  const hoursRef = document.querySelector('[data-hours]');
-  const minsRef = document.querySelector('[data-minutes]');
-  const secsRef = document.querySelector('[data-seconds]');
-  daysRef.textContent = days;
-  hoursRef.textContent = hours;
-  minsRef.textContent = minutes;
-  secsRef.textContent = seconds;
-  btnStart.addEventListener('click', () => {
-    setInterval(() => {
-      updateTimer(delta);
-    }, 1000);
-  });
+function addLeadingZero({ days, hours, minutes, seconds }) {
+  daysRef.textContent = String(days).padStart(2, '0');
+  hoursRef.textContent = String(hours).padStart(2, '0');
+  minsRef.textContent = String(minutes).padStart(2, '0');
+  secsRef.textContent = String(seconds).padStart(2, '0');
 }
 
-//   updateTimer(time) {
-//     const currentTime = Date.now()
-//     const delta = chosenDate - currentTime;
-
-//     const daysEl = document.querySelector(`${this.selector} [data-value="days"]`)
-//     const hoursEl = document.querySelector(`${this.selector} [data-value="hours"]`)
-//     const minsEl = document.querySelector(`${this.selector} [data-value="mins"]`)
-//     const secsEl = document.querySelector(`${this.selector} [data-value="secs"]`)
-//     daysEl.textContent = Math.floor(time / (1000 * 60 * 60 * 24));
-//     hoursEl.textContent = String(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0')
-//     minsEl.textContent = String(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0')
-//     secsEl.textContent = String(Math.floor((time % (1000 * 60)) / 1000)).padStart(2, '0')
-
-//     setInterval(() => {
-//       updateTimer(delta)
-//     }, 1000)
-//   }
-// }
+btnStart.addEventListener('click', () => {
+  setInterval(() => {
+    const delta = chosenDate - Date.now();
+    addLeadingZero(convertMs(delta));
+  }, 1000);
+});
